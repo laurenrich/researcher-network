@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="btn-and-dropdown-container">
+            <div class="btn-container">
+                <button type="button" id="domain-btn" class="button active">Health Domain</button>
+                <button type="button" id="method-btn" class="button unactive">Methodology</button>
+            </div>  
+            <div class="dropdowns">
+                    <select id="facultyDomainDropdown" class="dropdown">
+                            <option class="dropdown-title" value="default">choose a faculty</option>
+                    </select>
+                    <select id="facultyMethodDropdown" class="hidden dropdown">
+                        <option class="dropdown-title" value="default">choose a faculty</option>
+                    </select>
+                    <select id="domainDropdown" class="dropdown">
+                        <option class="dropdown-title" value="default">choose a domain</option>
+                    </select>
+                    <select id="methodDropdown" class="hidden dropdown">
+                            <option class="dropdown-title" value="default">choose a method</option>
+                    </select>
+            </div>  
+        </div>
+        <div class="svg-container">
+            <svg id="svg-domain" class="svg" width="800" height="600"></svg>
+            <svg id="svg-method" class="svg hidden" width="800" height="600"></svg>
+        </div>
+
+        <script src="index.js"></script>
+    </div>
+</body>
+</html>
+

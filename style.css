@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+body {
+    font-family: Open Sans;
+    overflow-x: hidden;
+}
+.svg {
+    display: block;
+}
+
+
+.button {
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    padding: 10px 20px;
+    margin: 0;
+    font-family: Open Sans; 
+}
+
+.btn-container {
+    display: flex;
+    gap: 0;
+}
+
+#domain-btn {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 10px;
+}
+
+#method-btn {
+    border-top-left-radius: 0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 0;
+}
+
+.active {
+    background-color: #d5dee9;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    border-color:rgb(56, 136, 206);
+    color: rgb(56, 136, 206);
+    font-weight: bold;
+}
+
+.unactive {
+    background-color: white;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    border-color:rgb(170, 169, 173);
+    color: rgb(113, 112, 115);
+}
+
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+
+}
+
+.btn-and-dropdown-container, .svg-container {
+    box-sizing: border-box;
+}
+
+.btn-and-dropdown-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.svg-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin-right: 90px;
+}
+
+.btn-container {
+    margin-top: 35%;
+}
+
+.dropdowns {
+    margin-bottom: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdown:focus {
+    outline: none;
+}
+
+.dropdown {
+    display: flex;
+    height: 30px;
+    width: fit-content;
+    font-family: Open Sans;
+    border-radius: 5px;
+}
+
+
+
+.hidden {
+    display: none;
+}
+
+/* for node.html */
+
+.main-header, #content-section {
+    padding: 20px;
+}
+
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+h4 {
+    margin: 0;
+    font-size: 13px;
+}
+
+
+#topics-content {
+    padding: 20px;
+}
+
+.indv-topic-container {
+    padding: 20px;
+}
+
+
+
+
+
+
+
+
