@@ -467,7 +467,6 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
                     }
                 })
             }else{
-                var facToMeths = []
                 methodLinks.forEach(link => {
                     if(d.id === link.source.id){
                         facToNodes.push(link.target.id)
