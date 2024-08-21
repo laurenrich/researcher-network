@@ -34,6 +34,9 @@ var methodZoom = d3.zoom()
 var domainLinks;
 var methodLinks;
 
+var domainLegendData;
+var methodLegendData;
+
 d3.json("graphdata.json").then(data => {
     const domainNodes = [...data.facultyNodes, ...data.domainNodes]
     const methodNodes = [...data.facultyNodes, ...data.methodNodes]
@@ -45,6 +48,10 @@ d3.json("graphdata.json").then(data => {
     populateDropdowns(allNodes)
     renderSimulation(svgDomain, domainNodes, domainLinks, domainZoom, domainNodeMap)    
     renderSimulation(svgMethod, methodNodes, methodLinks, methodZoom, methodNodeMap)
+
+    domainLegendData = data.domainNodes;
+    methodLegendData = data.methodNodes;
+    createLegend(domainLegendData)
 
     var currentSvg = svgDomain
     var currentZoom = domainZoom
@@ -224,6 +231,7 @@ d3.json("graphdata.json").then(data => {
     
 
     document.getElementById("domain-btn").addEventListener('click', function() {
+        createLegend(domainLegendData)
         currentSvg = svgDomain
         currentZoom = domainZoom
         currentNodeMap = domainNodeMap
@@ -239,6 +247,7 @@ d3.json("graphdata.json").then(data => {
     })
     
     document.getElementById("method-btn").addEventListener('click', function() {
+        createLegend(methodLegendData)
         currentSvg = svgMethod
         currentZoom = methodZoom
         currentNodeMap = methodNodeMap
@@ -303,11 +312,7 @@ function emphasizeRects(squareNodeIDs, source){
     let fillColor;
     squareNodeIDs.forEach(squareNodeID => {
         const node = currentNodeMap.get(squareNodeID)
-        if(source === 'domain'){
-            fillColor = 'rgb(255, 0, 0)';
-        }else if(source == 'method'){
-            fillColor = 'rgb(48, 133, 48)';
-        }
+        fillColor = node.select("rect").attr("fill")
 
         node.select("rect")
             .transition()
@@ -324,11 +329,7 @@ function revertRects(squareNodeIDs, source){
     let fillColor;
     squareNodeIDs.forEach(squareNodeID => {
         const node = currentNodeMap.get(squareNodeID)
-        if(source === 'domain'){
-            fillColor = "rgba(255, 0, 0, 0.5)";
-        }else if(source == 'method'){
-            fillColor = "rgba(48, 133, 48, 0.5)";
-        }
+        fillColor = node.select("rect").attr("fill")
 
         node.select("rect")
             .transition()
@@ -520,6 +521,15 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
         }  
 
 }
+    var domaincolorIdx = 0;
+    var methodcolorIdx = 0;
+    colors = [
+            "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", 
+            "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#393b79", "#5254a3",
+            "#6b6ecf", "#9c9ede", "#637939", "#8ca252", "#b5cf6b", "#cedb9c", 
+            "#E7F10F", "#bd9e39", "#e7ba52", "#e7969c", "#c7c7c7", "#8c564b", 
+            "#d6616b", "#e7cb94", "#ff9896", "#c5b0d5", "#9edae5", "#F0B8E0"
+        ];
     function nodeShape(network, d){
         if(d.type === "Faculty"){
             network.append("circle")
@@ -529,12 +539,14 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
             network.append("rect")
                 .attr("width", 10)
                 .attr("height", 10)
-                .attr("fill", "rgba(255, 0, 0, 0.5)")
+                .attr("fill", colors[domaincolorIdx])
+        domaincolorIdx = domaincolorIdx + 1
         }else if(d.type === "Method"){
             network.append("rect")
                 .attr("width", 10)
                 .attr("height", 10)
-                .attr("fill", "rgba(48, 133, 48, 0.5)")
+                .attr("fill", colors[methodcolorIdx])
+        methodcolorIdx = methodcolorIdx + 1
         }
     }
 
@@ -557,6 +569,27 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
         btnClicked.classList.remove('unactive')
         btnUnclicked.classList.add('unactive')
         btnClicked.classList.add('active')
+    }
+
+    function createLegend(legendData){
+        const legend = document.getElementById("legend-list");
+        legend.innerHTML = '';
+        const facli = document.createElement("li")
+        const facspan = document.createElement("span")
+        facspan.classList.add('circle')
+        facli.appendChild(facspan)
+        facli.appendChild(document.createTextNode("Faculty"))
+        legend.appendChild(facli)
+         
+        legendData.forEach((node, idx) =>{
+            const li = document.createElement("li")
+            const span = document.createElement("span")
+            span.classList.add("rect")
+            span.style.backgroundColor = colors[idx];
+            li.appendChild(span)
+            li.appendChild(document.createTextNode(node.id))
+            legend.appendChild(li)
+        })
     }
 
 

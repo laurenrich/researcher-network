@@ -3,6 +3,7 @@
 body {
     font-family: Open Sans;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 .svg {
     display: block;
@@ -57,7 +58,6 @@ body {
     display: flex;
     width: 100vw;
     height: 100vh;
-
 }
 
 .btn-and-dropdown-container, .svg-container {
@@ -65,7 +65,7 @@ body {
 }
 
 .btn-and-dropdown-container {
-    width: 60%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -78,19 +78,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
     margin-right: 90px;
 }
 
 .btn-container {
-    margin-top: 35%;
+    margin-top: 10%;
+    margin-bottom: 5%;
 }
 
 .dropdowns {
-    margin-bottom: 40%;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 }
@@ -102,12 +101,41 @@ body {
 .dropdown {
     display: flex;
     height: 30px;
-    width: fit-content;
+    width: 300px;
     font-family: Open Sans;
     border-radius: 5px;
 }
 
+.circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 255, 0.2); /* Default color */
+}
 
+.rect {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin-bottom: 15%;
+    margin-top: 40px;
+}
+
+span {
+    margin-right: 10px;
+}
+
+
+#legend-list li {
+    font-size: 12px;
+    line-height: 1;   
+}
 
 .hidden {
     display: none;
