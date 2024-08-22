@@ -3,8 +3,12 @@
 body {
     font-family: Open Sans;
     overflow-x: hidden;
+}
+
+#index-body {
     overflow-y: hidden;
 }
+
 .svg {
     display: block;
 }

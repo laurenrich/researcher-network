@@ -7,7 +7,12 @@ const termsText = document.getElementById("terms-text")
 const summaryHeader = document.getElementById("summary-header")
 const summaryText = document.getElementById("summary-text")
 
+//header title
 nameText.textContent = nodeName
+//page title
+const pageTitle = document.createElement("title")
+pageTitle.textContent = nodeName
+document.head.appendChild(pageTitle)
 
 d3.json("nodeinfo.json").then(data => {
 
@@ -114,7 +119,6 @@ d3.json("nodeinfo.json").then(data => {
         summaryText.textContent = curNode.summary
         
 
-
         var sumDiv = document.getElementById("summary-container") 
         var shortSumHeader = document.createElement("h2")
         shortSumHeader.id = 'short-summary-header'
@@ -124,5 +128,6 @@ d3.json("nodeinfo.json").then(data => {
         shortSumText.textContent = curNode.shortsummary
         sumDiv.insertBefore(shortSumText, sumDiv.firstChild)
         sumDiv.insertBefore(shortSumHeader, sumDiv.firstChild)
+
     }
 })
