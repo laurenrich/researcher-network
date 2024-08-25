@@ -64,171 +64,183 @@ d3.json("graphdata.json").then(data => {
     const domDropdown = document.getElementById("domainDropdown")
     const methDropdown = document.getElementById("methodDropdown")
 
- 
-    facultyDropdownDomain.addEventListener('change', function(event){
-        outlineFacDropdownBorder(d3.select(this), "yellow")
-       
+    function domainfacultySelected(selectedFac){
+        outlineFacDropdownBorder(d3.select(facultyDropdownDomain), "yellow") 
+        //reset prior fac web if exists 
         revertNodesBack(emphasizedDomainNodeID)
-        revertRects(rectsHighlightDomain, 'domain')
+        revertRects(rectsHighlightDomain)
         rectsHighlightDomain = []
         resetFacLinks(svgDomain, facNodeSelectionDomain)
-        
-        
-        //ensures that the overlap in emphasized nodes from fac dropdown and dom dropdown 
-        //will still be highlighted when fac dropdown is cleared
-        if(facultyDropdownDomain.selectedIndex == 0 && domDropdown.selectedIndex != 0) {
-            highlightLinks(domainnodeSelection)
-            highlightNodes(domainnodeSelection, domainLinks, emphasizedDomainNodeIDs)
-            emphasizeRects(rectHighlightDomain, 'domain')
-        }
+        //reset existing domain web if exists 
+        revertNodesBack(emphasizedDomainNodeIDs)
+        revertRects(rectHighlightDomain)
+        resetLinks(svgDomain, domainnodeSelection)
+        //clear domain dropdown and unhighlight dropdown border to show inactive 
+        domDropdown.selectedIndex = 0;
+        outlineFacDropdownBorder(d3.select(domDropdown), "")
 
+        facNodeSelectionDomain = selectedFac
+        const transform = d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(2)
+            .translate(-facNodeSelectionDomain.x, -facNodeSelectionDomain.y)
+        currentSvg.transition().duration(750).call(currentZoom.transform, transform)
+        console.log(d3.select(this))
+        emphasizeNode(facNodeSelectionDomain.id, emphasizedDomainNodeID, "yellow")
+        rectsHighlightDomain = domainLinks
+                                .filter(node => node.source.id === facNodeSelectionDomain.id)
+                                .map(node => node.target.id)
+    
+        highlightFacLinks(facNodeSelectionDomain, svgDomain) 
+        emphasizeRects(rectsHighlightDomain)
+    }
+
+    function methodfacultySelected(selectedFac){
+        outlineFacDropdownBorder(d3.select(facultyDropdownMethod), "yellow") 
+        //reset prior fac web if exists 
+        revertNodesBack(emphasizedMethodNodeID)
+        revertRects(rectsHighlightMethod)
+        rectsHighlightMethod = []
+        resetFacLinks(svgMethod, facNodeSelectionMethod)
+        //reset existing domain web if exists 
+        revertNodesBack(emphasizedMethodNodeIDs)
+        revertRects(rectHighlightMethod)
+        resetLinks(svgMethod, methodnodeSelection)
+        //clear domain dropdown and unhighlight dropdown border to show inactive 
+        methDropdown.selectedIndex = 0;
+        outlineFacDropdownBorder(d3.select(methDropdown), "")
+
+        facNodeSelectionMethod = selectedFac
+        const transform = d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(2)
+            .translate(-facNodeSelectionMethod.x, -facNodeSelectionMethod.y)
+        currentSvg.transition().duration(750).call(currentZoom.transform, transform)
+        console.log(d3.select(this))
+        emphasizeNode(facNodeSelectionMethod.id, emphasizedMethodNodeID, "yellow")
+        rectsHighlightMethod = methodLinks
+                                .filter(node => node.source.id === facNodeSelectionMethod.id)
+                                .map(node => node.target.id)
+    
+        highlightFacLinks(facNodeSelectionMethod, svgMethod) 
+        emphasizeRects(rectsHighlightMethod)
+    }
+
+
+
+    svgDomain.selectAll('circle').on('click', function(event) {
+        const selectionData = d3.select(this).datum()
+        const name = selectionData.id
+        facultyDropdownDomain.value = name
+        domainfacultySelected(selectionData)
+    })
+
+    svgMethod.selectAll('circle').on('click', function(event){
+        const selectionData = d3.select(this).datum()
+        const name = selectionData.id
+        facultyDropdownMethod.value = name
+        methodfacultySelected(selectionData)
+    })
+
+ 
+    facultyDropdownDomain.addEventListener('change', function(event){
         const dropdownSelection = event.target.value;
-        if(dropdownSelection){
-            facNodeSelectionDomain = allNodes.find(d => d.id === dropdownSelection)
-            if(facNodeSelectionDomain){
-                const transform = d3.zoomIdentity
-                    .translate(width/2, height/2)
-                    .scale(2)
-                    .translate(-facNodeSelectionDomain.x, -facNodeSelectionDomain.y)
-                currentSvg.transition().duration(750).call(currentZoom.transform, transform)
-                //highlight fac selection and store in 'emphasizedDomainNodeID'
-                emphasizeNode(facNodeSelectionDomain.id, emphasizedDomainNodeID, "yellow") 
-                //filters rect nodes (domain groups) to highlight in correspondence with selected fac
-                rectsHighlightDomain = domainLinks
-                                        .filter(node => node.source.id === facNodeSelectionDomain.id)
-                                        .map(node => node.target.id)
-                
-                //only show fac links and linked rects when dom dropdown is empty 
-                if(domDropdown.selectedIndex == 0) {
-                    highlightFacLinks(facNodeSelectionDomain, svgDomain) 
-                    emphasizeRects(rectsHighlightDomain, 'domain')
-                }
-            }
-        }
+        domainfacultySelected(allNodes.find(d => d.id === dropdownSelection))        
     })
 
     facultyDropdownMethod.addEventListener('change', function(event){
-        outlineFacDropdownBorder(d3.select(this), "yellow")
-
-        revertNodesBack(emphasizedMethodNodeID)
-        revertRects(rectsHighlightMethod, 'method')
-        rectsHighlightMethod = []
-        resetFacLinks(svgMethod, facNodeSelectionMethod)
-
-        if(facultyDropdownMethod.selectedIndex == 0 && methDropdown.selectedIndex != 0){
-            highlightLinks(methodnodeSelection)
-            highlightNodes(methodnodeSelection, methodLinks, emphasizedMethodNodeIDs)
-            emphasizeRects(rectHighlightMethod, 'method')
-        }
-
         const dropdownSelection = event.target.value;
-        if(dropdownSelection){
-            facNodeSelectionMethod = allNodes.find(d => d.id === dropdownSelection)
-            if(facNodeSelectionMethod){
-                const transform = d3.zoomIdentity
-                    .translate(width/2, height/2)
-                    .scale(2)
-                    .translate(-facNodeSelectionMethod.x, -facNodeSelectionMethod.y)
-                currentSvg.transition().duration(750).call(currentZoom.transform, transform)
-
-                emphasizeNode(facNodeSelectionMethod.id, emphasizedMethodNodeID, "yellow")
-        
-                rectsHighlightMethod = methodLinks
-                                        .filter(node => node.source.id === facNodeSelectionMethod.id)
-                                        .map(node => node.target.id)
-
-                if(methDropdown.selectedIndex == 0) {
-                    highlightFacLinks(facNodeSelectionMethod, svgMethod)
-                    emphasizeRects(rectsHighlightMethod, 'method') 
-                }
-            }
-        }
+        methodfacultySelected(allNodes.find(d => d.id === dropdownSelection))
     })
 
-    domDropdown.addEventListener('change', function(event){
-        outlineFacDropdownBorder(d3.select(this), "orange")
 
-        //unhighlight the domain rect in previous group
-        //unhighlight links & fac nodes in previous group
-        revertRects(rectHighlightDomain, 'domain')
+    function domainSelected(selectedDom){
+        outlineFacDropdownBorder(d3.select(domDropdown), "orange")
+        //unhighlight previous domain web if exists 
+        revertRects(rectHighlightDomain)
         rectHighlightDomain = []
         resetLinks(svgDomain, domainnodeSelection)
         revertNodesBack(emphasizedDomainNodeIDs)
-        //unhighlight links & domain rects linked to fac selection 
-        //these are only present when dom dropdown is cleared
-        revertRects(rectsHighlightDomain, 'domain')
+        //unhighlight previous fac web if exists 
+        revertRects(rectsHighlightDomain)
         resetFacLinks(svgDomain, facNodeSelectionDomain)
-       
-        
-        //when dom dropdown is cleared the links and domain rects are reinstated 
-        if(domDropdown.selectedIndex == 0 && facultyDropdownDomain.selectedIndex != 0){
-            highlightFacLinks(facNodeSelectionDomain, svgDomain)
-            emphasizeNode(facNodeSelectionDomain.id, emphasizedDomainNodeID, "yellow") 
-            emphasizeRects(rectsHighlightDomain, 'domain')
-        }
+        revertNodesBack(emphasizedDomainNodeID)
+        //clear fac dropdown and unhighlight dropdown border to show inactive
+        facultyDomainDropdown.selectedIndex = 0;
+        outlineFacDropdownBorder(d3.select(facultyDomainDropdown), "")
+
+       domainnodeSelection = selectedDom
+
+        const transform = d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(2)
+            .translate(-domainnodeSelection.x, -domainnodeSelection.y)
+        currentSvg.transition().duration(750).call(currentZoom.transform, transform)
+        //highlights links, nodes, and domain rects for group
+        highlightLinks(domainnodeSelection)
+        highlightNodes(domainnodeSelection, domainLinks, emphasizedDomainNodeIDs)
+        rectHighlightDomain[0] = domainnodeSelection.id
+        emphasizeRects(rectHighlightDomain)
+    }
 
 
+    function methodSelected(selectedMeth){
+        outlineFacDropdownBorder(d3.select(methDropdown), "orange")
+        //unhighlight previous domain web if exists 
+        revertRects(rectHighlightMethod)
+        rectHighlightMethod = []
+        resetLinks(svgMethod, methodnodeSelection)
+        revertNodesBack(emphasizedMethodNodeIDs)
+        //unhighlight previous fac web if exists 
+        revertRects(rectsHighlightMethod)
+        resetFacLinks(svgMethod, facNodeSelectionMethod)
+        revertNodesBack(emphasizedMethodNodeID)
+        //clear fac dropdown and unhighlight dropdown border to show inactive
+        facultyMethodDropdown.selectedIndex = 0;
+        outlineFacDropdownBorder(d3.select(facultyMethodDropdown), "")
+
+       methodnodeSelection = selectedMeth
+
+        const transform = d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(2)
+            .translate(-methodnodeSelection.x, -methodnodeSelection.y)
+        currentSvg.transition().duration(750).call(currentZoom.transform, transform)
+        //highlights links, nodes, and domain rects for group
+        highlightLinks(methodnodeSelection)
+        highlightNodes(methodnodeSelection, methodLinks, emphasizedMethodNodeIDs)
+        rectHighlightMethod[0] = methodnodeSelection.id
+        emphasizeRects(rectHighlightMethod)
+    }
+
+
+
+    svgDomain.selectAll('rect').on('click', function(event) {
+        const selectionData = d3.select(this).datum()
+        const name = selectionData.id
+        domDropdown.value = name
+        domainSelected(selectionData)
+    })
+
+    svgMethod.selectAll('rect').on('click', function(event) {
+        const selectionData = d3.select(this).datum()
+        const name = selectionData.id
+        methDropdown.value = name
+        methodSelected(selectionData)
+    })
+
+    domDropdown.addEventListener('change', function(event){
         const dropdownSelection = event.target.value;
-        if(dropdownSelection){
-            domainnodeSelection = allNodes.find(d => d.id === dropdownSelection)
-            if(domainnodeSelection){
-                const transform = d3.zoomIdentity
-                    .translate(width/2, height/2)
-                    .scale(2)
-                    .translate(-domainnodeSelection.x, -domainnodeSelection.y)
-                currentSvg.transition().duration(750).call(currentZoom.transform, transform)
-                //highlights links, nodes, and domain rects for group
-                highlightLinks(domainnodeSelection)
-                highlightNodes(domainnodeSelection, domainLinks, emphasizedDomainNodeIDs)
-                if(facultyDropdownDomain.selectedIndex != 0){
-                    emphasizeNode(facNodeSelectionDomain.id, emphasizedDomainNodeID, "yellow") 
-                }
-                rectHighlightDomain[0] = domainnodeSelection.id
-                emphasizeRects(rectHighlightDomain, 'domain')
-            }
-        }
-
+        domainSelected(allNodes.find(d => d.id === dropdownSelection))
     })
 
     methDropdown.addEventListener('change', function(event){
-        outlineFacDropdownBorder(d3.select(this), "orange")
-
-        revertRects(rectHighlightMethod, 'method')
-        rectHighlightMethod = []
-        resetLinks(svgMethod, methodnodeSelection)        
-        revertNodesBack(emphasizedMethodNodeIDs)
-        revertRects(rectsHighlightMethod, 'method')
-        resetFacLinks(svgMethod, facNodeSelectionMethod)
-
-        if(methDropdown.selectedIndex == 0 && facultyDropdownMethod.selectedIndex != 0){
-            highlightFacLinks(facNodeSelectionMethod, svgMethod)
-            emphasizeNode(facNodeSelectionMethod.id, emphasizedMethodNodeID, "yellow")
-            emphasizeRects(rectsHighlightMethod, 'method') 
-        }
-       
-
         const dropdownSelection = event.target.value;
-        if(dropdownSelection){
-            methodnodeSelection = allNodes.find(d => d.id === dropdownSelection)
-            if(methodnodeSelection){
-                const transform = d3.zoomIdentity
-                    .translate(width/2, height/2)
-                    .scale(2)
-                    .translate(-methodnodeSelection.x, -methodnodeSelection.y)
-                currentSvg.transition().duration(750).call(currentZoom.transform, transform)
-
-                highlightLinks(methodnodeSelection)
-                highlightNodes(methodnodeSelection, methodLinks, emphasizedMethodNodeIDs)
-                if(facultyDropdownMethod.selectedIndex != 0){
-                    emphasizeNode(facNodeSelectionMethod.id, emphasizedMethodNodeID, "yellow")
-                }
-                rectHighlightMethod[0] = methodnodeSelection.id
-                emphasizeRects(rectHighlightMethod, 'method')
-            }
-        }
-
+        methodSelected(allNodes.find(d => d.id === dropdownSelection))
     })
-    
+
+
+  
 
     document.getElementById("domain-btn").addEventListener('click', function() {
         createLegend(domainLegendData)
@@ -308,39 +320,42 @@ function highlightFacLinks(node, svg){
         .attr("stroke-width", 4)
 }
 
-function emphasizeRects(squareNodeIDs, source){
-    let fillColor;
-    squareNodeIDs.forEach(squareNodeID => {
-        const node = currentNodeMap.get(squareNodeID)
-        fillColor = node.select("rect").attr("fill")
+function emphasizeRects(squareNodeIDs){
+    if(squareNodeIDs){
+        let fillColor;
+        squareNodeIDs.forEach(squareNodeID => {
+            const node = currentNodeMap.get(squareNodeID)
+            fillColor = node.select("rect").attr("fill")
 
-        node.select("rect")
-            .transition()
-            .duration(750)
-            .attr("stroke", "orange")
-            .attr("stroke-width", 2)
-            .attr("fill", fillColor)
-            .attr("width", 15)
-            .attr("height", 15)
-        })
+            node.select("rect")
+                .transition()
+                .duration(750)
+                .attr("stroke", "orange")
+                .attr("stroke-width", 2)
+                .attr("fill", fillColor)
+                .attr("width", 15)
+                .attr("height", 15)
+            })
+    }
 }
 
-function revertRects(squareNodeIDs, source){
-    let fillColor;
-    squareNodeIDs.forEach(squareNodeID => {
-        const node = currentNodeMap.get(squareNodeID)
-        fillColor = node.select("rect").attr("fill")
+function revertRects(squareNodeIDs){
+    if(squareNodeIDs){
+        let fillColor;
+        squareNodeIDs.forEach(squareNodeID => {
+            const node = currentNodeMap.get(squareNodeID)
+            fillColor = node.select("rect").attr("fill")
 
-        node.select("rect")
-            .transition()
-            .duration(750)
-            .attr("stroke", "white")
-            .attr("stroke-width", 1)
-            .attr("fill", fillColor)
-            .attr("width", 10)
-            .attr("height", 10)
-        })
-
+            node.select("rect")
+                .transition()
+                .duration(750)
+                .attr("stroke", "white")
+                .attr("stroke-width", 1)
+                .attr("fill", fillColor)
+                .attr("width", 10)
+                .attr("height", 10)
+            })
+    }
 }
 
 
@@ -362,7 +377,6 @@ function emphasizeNode(nodeID, nodeArray, color){
 function revertNodesBack(nodes){
     nodes.forEach(node => {
         node = currentNodeMap.get(node)
-
         node.select("circle")
         .transition()
         .duration(750)
@@ -456,7 +470,7 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
         .on("mouseout", function(event, d){
             d3.select(this).select("text").text("")
         })
-        .on("click", function(event, d){
+        .on("dblclick", function(event, d){
             sessionStorage.setItem("nodeName", d.id)
             sessionStorage.setItem("currentGraph", currentGraph)
             sessionStorage.setItem("nodeType", d.type)
