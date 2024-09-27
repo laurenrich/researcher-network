@@ -275,6 +275,10 @@ d3.json("graphdata.json").then(data => {
     })
 })
 
+document.getElementById("faculty-stats-btn").addEventListener('click', function() {
+    window.open('stat.html', '_blank')
+})
+
 
 function highlightNodes(node, links, nodeArray) {
     links.forEach(link => {
@@ -605,6 +609,11 @@ function renderSimulation(svg, nodes, links, zoom, nodeMap){
             legend.appendChild(li)
         })
     }
+
+
+
+
+
 
 
 

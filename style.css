@@ -86,14 +86,14 @@ body {
 }
 
 .btn-container {
-    margin-top: 10%;
+    margin-top: 5%;
     margin-bottom: 5%;
 }
 
 .dropdowns {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     justify-content: center;
     align-items: center;
 }
@@ -179,6 +179,34 @@ h4 {
 .indv-topic-container {
     padding: 20px;
 }
+
+#size-rank-text {
+    font-size: 20px;
+    padding: 0;
+    margin-top: 0;
+}
+
+#research-topics-text {
+    font-size: 20px;
+    margin-top: 0;
+}
+
+.bar {
+    fill: rgb(87, 129, 193);
+}
+
+#faculty-stats-btn {
+    margin-top: 30px; 
+    padding: 5px;
+    font-family: Open Sans;
+    
+}
+
+
+
+
+
+
 
 
 

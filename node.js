@@ -6,6 +6,7 @@ const termsHeader = document.getElementById("terms-header")
 const termsText = document.getElementById("terms-text")
 const summaryHeader = document.getElementById("summary-header")
 const summaryText = document.getElementById("summary-text")
+const contentSect = document.getElementById("content-section")
 
 //header title
 nameText.textContent = nodeName
@@ -22,7 +23,8 @@ d3.json("nodeinfo.json").then(data => {
             nodeMap.set(domain.name, {
                 terms: domain.terms,
                 shortsummary: domain.shortsummary,
-                summary: domain.summary
+                summary: domain.summary,
+                sizerank: domain.sizerank
             })
         })
     }else{
@@ -30,7 +32,8 @@ d3.json("nodeinfo.json").then(data => {
             nodeMap.set(method.name, {
                 terms: method.terms,
                 shortsummary: method.shortsummary,
-                summary: method.summary
+                summary: method.summary,
+                sizerank: method.sizerank
             })
         })
     }
@@ -60,8 +63,6 @@ d3.json("nodeinfo.json").then(data => {
         summaryHeader.textContent = "Research Interests"
         summaryText.textContent = curFac.summary
 
-
-        const contentSect = document.getElementById("content-section")
         const topicsDiv = document.createElement("div")
         topicsDiv.id = 'topics-container'
         contentSect.appendChild(topicsDiv)
@@ -72,6 +73,14 @@ d3.json("nodeinfo.json").then(data => {
         topicsDiv.appendChild(topicHeader)
         topicsDiv.appendChild(topicsContentDiv)
         const researchTopics = JSON.parse(sessionStorage.getItem("researchTopics"))
+
+        const numResearchTopics = researchTopics.length
+        researchTopicsText = document.createElement("p")
+        researchTopicsText.id = "research-topics-text"
+        researchTopicsText.textContent = "Number of Research Topics: " + numResearchTopics
+        contentSect.insertBefore(researchTopicsText, contentSect.firstChild)
+
+
         researchTopics.forEach(topic => {
             const indvTopicDiv = document.createElement("div")
             indvTopicDiv.classList.add("indv-topic-container")
@@ -117,7 +126,13 @@ d3.json("nodeinfo.json").then(data => {
         termsText.textContent = curNode.terms
         summaryHeader.textContent = "Summary"
         summaryText.textContent = curNode.summary
-        
+
+
+        var sizeRankText = document.createElement("p")
+        contentSect.insertBefore(sizeRankText, contentSect.firstChild)
+        sizeRankText.id = "size-rank-text"
+        sizeRankText.textContent = "This domain group is ranked " + curNode.sizerank + "/30 by size"
+
 
         var sumDiv = document.getElementById("summary-container") 
         var shortSumHeader = document.createElement("h2")
